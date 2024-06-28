@@ -156,7 +156,7 @@
             <div class="dropdown-divider"></div><a class="dropdown-item" href="#">
               <svg class="icon me-2">
                 <use xlink:href="{{asset('icons/coreui.svg#cil-lock-locked')}}"></use>
-              </svg> Lock Account</a><a class="dropdown-item" href="#">
+              </svg> Lock Account</a><a class="dropdown-item" href="#"></a>
               {{-- <svg class="icon me-2">
                 <use xlink:href="{{asset('icons/coreui.svg#cil-account-logout')}}"></use>
               </svg> Logout</a> --}}

@@ -25,6 +25,11 @@ use App\Models\Reservation;
 use App\Models\Foodchef;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Fooditem;
+use App\Models\Category; 
+use App\Models\Address; 
+
+
 
 
 class AdminController extends Controller
@@ -68,46 +73,55 @@ class AdminController extends Controller
 
     public function foodmenu(){
      
-        $data =food::all();
-        return view('admin.foodmenu',compact('data'));
+        $fooditems =Fooditem::all();
+        // return view('admin.foodmenu',compact('foodItems'));
+        $categories =Category::all();
+        return view('admin.foodmenu',compact('fooditems','categories'));
+        
+        
     }
 
-    public function categories()
-    {
-        $data =food::all();
-        return view('admin.categories',compact("data"));
-        // $categories = Category::all();
-        // return view('admin.categories',compact('categories'));
-    }
+    // public function categories()
+    // {
+    //     // $categories=Category::all();
+    //     $categories = Category::with('foodItems')->get();
+
+    //     // dd($categories);
+    //     return view('admin.categories',compact('categories'));
+    //     // $categories = Category::all();
+    //     // return view('admin.categories',compact('categories'));
+    // }
+
 
     public function deletemenu($id){
      
-        $data =food::find($id);
-        $data->delete();
+        $categories=FoodItem::find($id);
+        $categories->delete();
         return redirect()->back();
 
     }
 
     public function updateview($id){
      
-        $data =food::find($id);
-        return view('admin.updateview',compact("data")); 
+        $categories =FoodItem::find($id);
+        return view('admin.updateview',compact("categories")); 
 
     }
 
     public function update(Request $request,$id){
      
-        $data =food::find($id);
+        $categories =FoodItem::find($id);
         $image = $request->image;
 
         $imagename = time().'.'.$image->getClientOriginalExtension();
                $request->image->move('foodimage',$imagename);
 
-               $data->image=$imagename;
-               $data->title=$request->title;
-               $data->price=$request->price;
-               $data->description=$request->description;
-               $data->save();
+               $categories->image=$imagename;
+               $categories->title=$request->title;
+               $categories->price=$request->price;
+               $categories->description=$request->description;
+
+               $categories->save();
 
                return redirect()->back();
     
@@ -115,18 +129,13 @@ class AdminController extends Controller
     }
 
     public function uploadfood(Request $request){
-        $data = new food;
+        $categories = new FoodItem;
 
-        $image = $request->image;
+               $categories->title=$request->title;
+               $categories->description=$request->description;
+               $categories->category_id = $request->category_id;
 
-        $imagename = time().'.'.$image->getClientOriginalExtension();
-               $request->image->move('foodimage',$imagename);
-
-               $data->image=$imagename;
-               $data->title=$request->title;
-               $data->price=$request->price;
-               $data->description=$request->description;
-               $data->save();
+               $categories->save();
 
                return redirect()->back();
     
@@ -163,23 +172,23 @@ class AdminController extends Controller
 
     public function chefdata()
     {
-        $data= foodchef::all();
-        return view("admin.chefdata",compact("data"));
+        $data1= foodchef::all();
+        return view("admin.chefdata",compact("data1"));
     }
     
     public function uploadchef(Request $request)
     {
-        $data= new foodchef;
+        $data1= new foodchef;
         $image = $request->image;
 
         $imagename = time().'.'.$image->getClientOriginalExtension();
            $request->image->move('chefimage',$imagename);
-           $data->image=$imagename;
+           $data1->image=$imagename;
 
-           $data->name = $request->name;
-           $data->speciality = $request->speciality;
+           $data1->name = $request->name;
+           $data1->speciality = $request->speciality;
 
-           $data->save();
+           $data1->save();
            return redirect()->back();
 
     
@@ -187,26 +196,26 @@ class AdminController extends Controller
 
     public function viewchef()
     {
-        $data=foodchef::all();
-        return view("admin.viewchef",compact("data"));
+        $data1=foodchef::all();
+        return view("admin.viewchef",compact("data1"));
     }
      
     public function adminchef()
     {
-        $data=foodchef::all();
-        return view("admin.adminchef",compact("data"));
+        $data1=foodchef::all();
+        return view("admin.adminchef",compact("data1"));
     }
 
     public function updatechef($id)
     {
-        $data=foodchef::find($id);
-        return view("admin.updatechef",compact("data"));
+        $data1=foodchef::find($id);
+        return view("admin.updatechef",compact("data1"));
     }
 
     public function deletechef($id){
      
-        $data =foodchef::find($id);
-        $data->delete();
+        $data1 =foodchef::find($id);
+        $data1->delete();
         return redirect()->back();
 
     }
@@ -214,7 +223,7 @@ class AdminController extends Controller
 
     public function updatefoodchef(Request $request, $id)
     {
-        $data=foodchef::find($id);
+        $data1=foodchef::find($id);
         $image = $request->image;
         
         if($image)
@@ -223,24 +232,86 @@ class AdminController extends Controller
 
         $imagename = time().'.'.$image->getClientOriginalExtension();
                $request->image->move('chefimage',$imagename);
-               $data->image=$imagename;
+               $data1->image=$imagename;
         }       
 
-           $data->name = $request->name;
-           $data->speciality = $request->speciality;
+           $data1->name = $request->name;
+           $data1->speciality = $request->speciality;
 
-           $data->save();
+           $data1->save();
            return redirect()->back();
         
         }
 
-    public function orders()
-    {
-        $data=order::all();
 
-        return view('admin.orders',compact('data'));
+public function orders(Request $request)
+{
+   
+    $user_id = Auth::user()->id;
+    $order = Order::with('Orderitem', 'address')->where('status', 0)->where('user_id', $user_id)->first();
+
+    $order->address_id = $request->address_id;
+    
+
+    $order->save();
+
+    $address = Address::all(); 
+
+    return view('admin.orders', compact('order', 'address'));
+}
+
+    public function managecategory(Request $request){
+        
+        if ($request->isMethod('post')) {
+        
+            $data = $request->validate(['cat_title' => 'required']);
+    
+            
+            Category::create($data);
+    
+        
+            return redirect()->route('admin.managecategory')->with('msg', 'Category Inserted Successfully');
+        }
+    
+    
+        $data['categories'] = Category::all();
+    
+        
+        return view('admin.managecategory', $data);
     }
+    
+    public function updatecategory(Request $request,$id){
+        if ($request->isMethod('post')) {
+            
+            $data = $request->validate(['cat_title' => 'required']);
+    
+            
+            Category::findOrfail($id)->update($data);
+    
+        }
+    
+        
+        $data['categories'] = Category::all();
+    
+    
+        return view('admin.managecategory', $data);
+    }
+    
+    public function deletecategory(Request $request)
+    {
+        $id = $request->id;
+        
+        $record=Category::findOrfail($id);
+        $record->delete();
 
+        return redirect()->back()->with('msg','Category deleted successfully');
+    }    
+    
+    public function managecart(){
+        $data ['totalCarts'] = Order::where('status',false)->get();
+        $data['carts'] = Order::where('status',false)->orderBy('id','desc')->paginate(1);
+        return view('admin.managecart',$data);
+    }
     public function search(Request $request)
     {
         $search=$request->search;
@@ -249,25 +320,9 @@ class AdminController extends Controller
         return view('admin.orders',compact('data'));
     }
 
-//     public function search(Request $request)
-// {
-//     // Sanitize input
-//     $search = $request->input('search');
-
-//     // Perform search
-//     $data = Order::where('name', 'like', '%' . $search . '%')
-//                  ->orWhere('foodname', 'like', '%' . $search . '%')
-//                  ->get();
-
-//     // Pass the results to the view
-//     return view('admin.orders', compact('data'));
-// }
 
     
-    // public function index(){
-    //     return view('admin.index');
-    // }
-
+    
     /**
      * Show the login view.
      *

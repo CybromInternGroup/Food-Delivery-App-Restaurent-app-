@@ -1,65 +1,68 @@
-
 @extends('admin.index')
+
 @section('admin')
 <div class="container-lg">
     <div class="row">
-    <h1>Customer Orders </h1>
-     
-    <form action="{{url('/search-results')}}" method="get">
-        @csrf
-        <input type="text" name="search" style="color:black"/>
-        <input type="submit" value="search" class="btn btn-primary"/>
-    </form> 
+        <h1>Customer Orders</h1>
 
-    <table class="table table-hover mt-4 datatable">
-    <thead>
-                  <tr>
-                  <th>Sno.</th>
-                  <th>Name</th>
-                  <th>Address</th>
-                  <th>Foodname</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total Price</th>
+        <form action="{{ url('/search-results') }}" method="get">
+            @csrf
+            <input type="text" name="search" style="color:black"/>
+            <input type="submit" value="Search" class="btn btn-primary"/>
+        </form>
 
-                   </tr>
-                   </thead>
-                   <tbody>
-                        
-                     @foreach ($data as $item)
-                           <tr>
-                            <td>{{$loop->index+1 }}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->address}}</td>
-                            <td>{{$item->foodname}}</td>
-                            <td>{{$item->price}}$</td>
-                            <td>{{$item->quantity}}</td>
-                            <td>{{$item->price * $item->quantity}}$</td>    
-                          </tr> 
-                         @endforeach  
-                        </tbody>
-              
-                        
-                      </table> 
-           
-                  </div> 
-           
-          {{-- <div class="card-body pb-0 d-flex justify-content-between align-items-start">
-            <div>
-            --}}
-              {{-- <div class="dropdown-menu dropdown-menu-end"><a class="dropdown-item">Action</a><a class="dropdown-item" href="#">Another action</a><a class="dropdown-item" href="#">Something else here</a></div>
-            </div> --}}
-        </div>
-          </div>
-         </div>
-                
+        <table class="table table-hover mt-4 datatable">
+            <thead>
+                <tr>
+                    <th>Sno.</th>
+                    <th>Customer Name</th>
+                    <th>Foodname</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $totalAmount = 0;
+                @endphp
+
+            
+                @if ($order)
+                    @foreach ($order->Orderitem as $item)
+                        @php
+                            $subtotal = $item->product->discount_price * $item->quantity;
+                            $totalAmount += $subtotal;
+                        @endphp
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ Auth::user()->name }}</td>
+                            <td>{{ $item->product->title }}</td>
+                            <td>₹{{ number_format($item->product->discount_price, 2) }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>₹{{ number_format($subtotal, 2) }}</td>
+                            <td>
+                                @if ($order->address)
+                                    <p>{{ $order->address->address_id }}</p>
+                                @else
+                                    <p>No address associated with this order.</p>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="7">No orders found.</td>
+                    </tr>
+                @endif
+
+                <tr>
+                    <td colspan="5" style="text-align: right;"><strong>Sub Total:</strong></td>
+                    <td><strong>₹{{ number_format($totalAmount, 2) }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
-                  
-      {{-- </div> --}}
-      <!-- /.col-->
-    </div>
-     </div> 
-     
-
 @endsection

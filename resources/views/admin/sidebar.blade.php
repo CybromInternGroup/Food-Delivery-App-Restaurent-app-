@@ -29,14 +29,21 @@
         <ul class="nav-group-items">
           <li class="nav-item"><a class="nav-link" href="{{ url('/users') }}"><span class="nav-icon"></span> Users</a></li>
 
-          <li class="nav-item"><a class="nav-link" href="{{ url('/foodmenu')}}" class="nav-link"><span class="nav-icon"></span> FoodMenu</a></li>
+          {{-- <li class="nav-item"><a class="nav-link" href="{{ url('/foodmenu')}}" class="nav-link"><span class="nav-icon"></span> FoodMenu</a></li> --}}
 
           <li class="nav-item"><a class="nav-link" href="{{ url('/adminchef')}}" class="nav-link"><span class="nav-icon"></span> Chefs</a></li>
 
           <li class="nav-item"><a class="nav-link" href="{{ url('/viewreservation') }}" class="nav-link"><span class="nav-icon"></span> Reservations</a></li>
-
+          
           <li class="nav-item"><a class="nav-link" href="{{ url('/orders') }}" class="nav-link"><span class="nav-icon"></span> Orders</a></li>
+          
+          <li class="nav-item"><a class="nav-link" href="{{ url('/managecategory') }}" class="nav-link"><span class="nav-icon"></span> Manage Category</a></li>
+          
 
+          <li class="nav-item"><a class="nav-link" href="{{ url('/product/create') }}" class="nav-link"><span class="nav-icon"></span> Insert Product</a></li>
+ 
+          <li class="nav-item"><a class="nav-link" href="{{ url('/product') }}" class="nav-link"><span class="nav-icon"></span> Manage Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url('/managecart') }}" class="nav-link"><span class="nav-icon"></span> Manage Carts</a></li>
 
           {{-- <li class="nav-item"><a class="nav-link" href="base/collapse.html"><span class="nav-icon"></span> Collapse</a></li>
           <li class="nav-item"><a class="nav-link" href="base/list-group.html"><span class="nav-icon"></span> List group</a></li>

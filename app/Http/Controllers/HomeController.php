@@ -8,49 +8,19 @@ use App\Models\Food;
 use App\Models\Foodchef;
 use App\Models\Cart;
 use App\Models\Order;
-
+use App\Models\Category;
 
 
 class HomeController extends Controller
 {
     public function index()
-    {
+     {
         
-        if(Auth::id())
-        {
-            return redirect('redirects');
-        }
         
-        else{
-        $data =food::all();
-        // dd($data);
-        $data1 =foodchef::all();
-        return view("home",compact("data","data1"));
-        }
+       $data['categories'] = Category::all();
+       return view('home',$data);
     }
 
-    public function redirects(){
-        // dd($data);
-        $data=food::all();
-        // dd($data);
-
-        $data1 = foodchef::all();
-        $usertype =Auth::user()->usertype;
-
-        if($usertype=='1')
-        {
-            return view('admin.dashboard');
-        }
-        else
-        {
-            $user_id= Auth::id();
-            $count = Cart::where('user_id',$user_id)->count();
-
-    
-            return view("home",compact("data","data1","count"));
-       }
-
-    }
 
     public function addcart(Request $request, $id)
     {
@@ -59,12 +29,15 @@ class HomeController extends Controller
         {
             $user_id= Auth::id();
             // dd($user_id);
+
+
             $foodid= $id;
             $quantity = $request->quantity;
             $cart=new cart;
             $cart->user_id=$user_id;
             $cart->food_id=$foodid;
             $cart->quantity=$quantity;
+            
             $cart->save();
 
 
@@ -77,32 +50,16 @@ class HomeController extends Controller
         }
     }
 
-    // public function showcart(Request $request, $id)
-    // { 
-    //     // $count=cart::where('user_id',$id)->count();
 
 
-    //     $cart = Cart::where('user_id', $id)->first();
-       
-    //     $quantity = $cart->quantity;
-    //     // dd($quantity);
-    
-    //     if ($cart) {
-    //         $foodId = $cart->food_id;
-    //         $food = Food::where('id', $foodId)->first();
-    
+     public function logout() {
+      Auth::logout();
+      return redirect()->route('home.index'); 
 
-    //         $data = [$food]; // Or any other logic to prepare the data
-            
-    //         return view('showcart', compact('data', 'quantity','cart'));
-    //     }
-    //   else {
-    //         return redirect()->back()->with('error', 'Cart not found');
-    //     }
-    // }
-    
+     }
+
     public function showcart(Request $request, $id)
-{ 
+    {   
     if(Auth::id() == $id)
     {
         $cartItems = Cart::where('user_id', $id)->get();
@@ -131,23 +88,12 @@ class HomeController extends Controller
     }
 }
 
-
-    // public function remove($id)
-    // {
-    //     $item= Cart::find($id);
-    //     $item->delete();
-
-    //     return redirect()->back();
-
-
-    // }
-
     public function remove(Request $request, $id)
     {
         try {
             $item = Cart::find($id);
             
-            // Check if item exists
+            
             if ($item) {
                 $item->delete();
                 return redirect()->back()->with('success', 'Item removed successfully');
@@ -158,23 +104,11 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'Failed to remove item');
         }
     }
-    
-
-
-// public function deletechef($id){
-     
-//     $data =foodchef::find($id);
-//     $data->delete();
-//     return redirect()->back();
-
-// }
-
 
 
 
     public function orderconfirm(Request $request)
     {
-        // dd($request->all());
   
      foreach($request->foodname as $key =>$foodname)  
      {
@@ -191,6 +125,6 @@ class HomeController extends Controller
 
     return redirect()->back();
      
-    }  
+    } 
 
 }

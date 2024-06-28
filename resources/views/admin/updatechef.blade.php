@@ -64,6 +64,7 @@
       <!-- /.col-->
     </div>
      </div> 
-     
+     dd($order->toArray()); // Debugging output
+
 
 @endsection

@@ -28,7 +28,6 @@
                    
         </div>
          
-        {{-- <div class="card mb-4 text-white bg-primary-gradient"> --}}
           <div class="card-body pb-0 d-flex justify-content-between align-items-start">
             <div>
            

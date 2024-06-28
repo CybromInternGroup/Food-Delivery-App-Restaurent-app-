@@ -18,9 +18,9 @@
     
                     @if($data->is_admin=="0")
                         
-                    <td><a href="{{url('/deleteuser',$data->id)}}">Delete</a></td>
+                    <td><button><a href="{{url('/deleteuser',$data->id)}}">Delete</a></td></button>
                     @else
-                    <td><a href="">Not Allowed</a></td>
+                    <td><button><a href="">Not Allowed</a></td></button>
                     @endif
     
                 </tr>

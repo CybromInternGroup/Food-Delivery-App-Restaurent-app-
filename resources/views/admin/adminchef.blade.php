@@ -12,12 +12,7 @@
            <div class="card mt-3 p-3">
           <form action="{{url('/uploadchef')}}" method="post" enctype="multipart/form-data">
                @csrf
-              {{-- <div class="form-group">
-                  <label>Name</label>
-                  <input type="text" name="name"  class="form-control" value="" required/>
-              </div>
-               --}}
-
+              
                <div class="form-group"><br>
                 <label>Name</label>
                 <input type="text" name="name" class="form-control"/> 
