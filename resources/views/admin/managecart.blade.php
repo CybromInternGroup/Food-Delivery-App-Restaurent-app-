@@ -17,7 +17,7 @@
                     <th>Order Id </th>
                     <td>{{$item->id}} </td>
                     <th>Order by </th>
-                    <td>{{ optional($item->users)->name }}</td>
+                    <td>{{ ($item->users)->name }}</td>
                     <th>contact info</th>
                     <td>{{ optional($item->users)->email }}</td>
 

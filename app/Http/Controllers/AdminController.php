@@ -81,17 +81,6 @@ class AdminController extends Controller
         
     }
 
-    // public function categories()
-    // {
-    //     // $categories=Category::all();
-    //     $categories = Category::with('foodItems')->get();
-
-    //     // dd($categories);
-    //     return view('admin.categories',compact('categories'));
-    //     // $categories = Category::all();
-    //     // return view('admin.categories',compact('categories'));
-    // }
-
 
     public function deletemenu($id){
      

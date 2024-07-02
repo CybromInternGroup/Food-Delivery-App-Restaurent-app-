@@ -20,16 +20,50 @@ class OrderController extends Controller
 {    
 
     public function myorder()
-{
+{    
+
+
     $user_id = Auth::user()->id;
     $order = Order::with('Orderitem')->where('status', 0)->where('user_id', $user_id)->first();
+    $address_id = $order->address_id;
+    // dd($address_id);
+
 
     if ($order) {
-        return view('myorder', ['order' => $order]);
+        return view('myorder', ['order' => $order,'address'=>$address_id]);
     } else {
-        return view('myorder', ['order' => null]); 
+        return view('myorder', ['order' => null,'address_id' => null]); 
     }
 }
+
+
+
+
+// public function myorder()
+// {
+//     $user_id = Auth::id();
+
+    
+
+//     $order = Order::with('address', 'orderItems')
+//                     ->where('status', 0)
+//                     ->where('user_id', $user_id)
+//                     ->latest()
+//                     ->first();
+
+//     // Check if the order exists
+//     if ($order) {
+//         // Retrieve the address details associated with the order
+//         $address = $order->address;
+//     } else {
+//         $address = null;
+//     }
+
+//     // Pass the order, address, and other necessary data to the view
+//     return view('myorder', compact('order', 'address','orderItems'));
+// }
+
+
 
     public function addProduct(Request $request, $orderId)
     {   
@@ -56,16 +90,15 @@ class OrderController extends Controller
         return view('myorder', compact('order'));
     }
 
-  
-        
+    
     public function addtoCart(Request $request, $id){
         // dd($pid);
         $product = Product::find($id);
-        // dd($product);
+        //  dd($product);
+        $user_id = Auth::user()->id;
 
-        $user = Auth::user();
         if($product){
-            $order = Order::where([['status',false],['user_id',$user->id]])->first();
+            $order = Order::where([['status',false],['user_id',$user_id]])->first();
 
             if($order){
                 $Orderitem = Orderitem::where('status',false)->where('product_id',$id)->where('order_id',$order->id)->first();
@@ -78,6 +111,7 @@ class OrderController extends Controller
                    $Orderitem = new Orderitem();
                    $Orderitem->status = false;
                    $Orderitem->product_id = $id;
+                   $Orderitem->user_id = $user_id;
                    $Orderitem->order_id = $order->id;
                    $Orderitem->save();
             }
@@ -89,19 +123,19 @@ class OrderController extends Controller
         $order->status = false;
         $order->save();
 
-    
-    
     }
 
-//need to change with cart page
-return redirect()->route('cart')->with('success','product added or updated on cart successfully');
-}
-else{
-    return redirect()->route('home.index')->with('error','product not fonud');
-}
-}
+      //need to change with cart page
+      return redirect()->route('cart')->with('success','product added or updated on cart successfully');
+      }
 
-public function removefromCart(Request $request, $id){
+     else{
+      return redirect()->route('home.index')->with('error','product not fonud');
+    }
+    }
+
+
+    public function removefromCart(Request $request, $id){
     
     $product = Product::find($id);
 
@@ -121,7 +155,6 @@ public function removefromCart(Request $request, $id){
               else{
                $Orderitem->delete();
               }
-
 
             }
                }
@@ -160,6 +193,10 @@ public function saveadd(Request $request){
        $data['user_id'] = Auth::id();
        $address=Address::create($data);
        session::put('address',$address);
+       $address_id = $address->id;
+       $user_id = Auth::id();
+       Orderitem::where('user_id', $user_id)->update(['address_id' => $address_id]);
+
        return redirect()->back()->with('success','Address Inserted Successfully');
     }
     return view('checkout',$data);
@@ -173,7 +210,6 @@ public function thankYou()
     
         return view('thanku', ['message' => $message]);
     }
-
 
 }
 

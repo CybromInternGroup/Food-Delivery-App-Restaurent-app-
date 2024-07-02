@@ -21,6 +21,8 @@
                         <th>Order ID</th>
                         <th>Date</th>
                         <th>Total Price</th>
+                        <th>Address</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +51,8 @@
                             <td>{{ $order->id }}</td>
                             <td>{{ $item->created_at->format('d-m-Y') }}</td>
                             <td>₹{{ number_format($item->product->discount_price * $item->quantity, 2) }}</td> {{-- Display current item total price --}}
+                            <td>{{ $item->address }}</td>
+
                         </tr>
                     @endforeach
 

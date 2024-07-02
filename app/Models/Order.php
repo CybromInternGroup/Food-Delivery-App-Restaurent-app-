@@ -19,7 +19,7 @@ class Order extends Model
         'address_id', 
 
     ];
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -32,7 +32,7 @@ class Order extends Model
     }
 
     public function Orderitem():HasMany{
-        return $this->hasMany(Orderitem::class,'order_id','id');
+        return $this->hasMany(Orderitem::class,'order_id','id','address_id');
     }
 
     

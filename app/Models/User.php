@@ -29,9 +29,9 @@ class User extends Authenticatable
         'password',
     ];
     
-        public function address(): HasMany
+        public function address()
     {
-        return $this->hasMany(Address::class);
+        return $this->belongsTo(Address::class);
     }
 
     public function orders(): HasMany
