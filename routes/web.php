@@ -100,10 +100,11 @@ Route::delete('/product/delete/{id}',[ProductController::class,'removeproduct'])
 
 Route::middleware('auth')->group(function(){
 
-    Route::controller(OrderController::class)->group(function(){
+        Route::controller(OrderController::class)->group(function(){
         Route::get('/add-to-cart/{pid}','addtoCart')->name('addtoCart');
         Route::get('/remove-from-cart/{pid}','removefromCart')->name('removefromCart');
         Route::get('/cart',[OrderController::class,'cart'])->name('cart');
+        Route::get('/viewcart',[OrderController::class,'viewcart'])->name('viewcart');
         Route::get('/myorder','myorder')->name('myorder');
         Route::get('/payment/callback', 'PaymentController@handlePaymentCallback');
         Route::post('/payment', [PaymentController::class, 'Payment'])->name('orderCreate');

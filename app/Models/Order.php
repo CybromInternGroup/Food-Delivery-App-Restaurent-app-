@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Models\Order; 
 
 class Order extends Model
 {
@@ -16,43 +16,33 @@ class Order extends Model
         'foodname',
         'quantity',
         'price',
-        'address_id', 
-
+        'address_id',
     ];
-    
-    public function user()
+
+    // Define relationships
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function address()
+    public function address(): BelongsTo
     {
         return $this->belongsTo(Address::class, 'address_id');
-
     }
 
-    public function Orderitem():HasMany{
-        return $this->hasMany(Orderitem::class,'order_id','id','address_id');
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
 
-    
-    public function payment()
-   {
-    return $this->hasOne(Payment::class);
-   }
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
 
-
-    // public function users():HasOne{
-    //     return $this->HasOne(User::class,'id','user_id');
-    // }
-
-
-
-    public function payments()
+    public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
-    
-
-    
 }

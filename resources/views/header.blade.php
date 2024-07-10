@@ -12,6 +12,7 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    
 
     <title>Klassy Cafe - Restaurant HTML Template</title>
 <!--
@@ -89,10 +90,9 @@ https://templatemo.com/tm-558-klassy-cafe
                                     <li><a href="#">Features Page 4</a></li>
                                 </ul>
                             </li>
-                            <!-- <li class=""><a rel="sponsored" href="https://templatemo.com" target="_blank">External URL</a></li> -->
-                            <li class="scroll-to-section"><a href="#reservation">Contact Us</a></li>          
-                            </a></li> 
-
+                            <li class="scroll-to-section"><a href="#reservation">Contact Us</a></li> 
+                            <li class="scroll-to-section"><a href="{{ route('viewcart') }}"> My Cart</a></li>
+                            
                             <li>
                                 @if (Route::has('login'))
                                 <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
