@@ -24,6 +24,12 @@ class Address extends Model
 
     }
 
+    public function orderItems()
+    {
+    return $this->hasMany(OrderItem::class, 'address_id');
+    }
+
+
     
     
     

@@ -4,7 +4,7 @@
         <h1>My Orders</h1>
     </div>
 
-    @if ($order && $order->orderItems->count() > 0) 
+    @if ($order->count() > 0) 
         <div class="row">
             <div class="col-12">
                 <table class="table">
@@ -26,7 +26,7 @@
                             $deliveryCharge = 50;
                         @endphp
 
-                        @foreach ($order->orderItems as $item)
+                        @foreach ($order as $item)
                             @php
                                 $itemTotalPrice = $item->product->discount_price * $item->quantity;
                                 $subtotal += $itemTotalPrice;
@@ -35,7 +35,7 @@
                                 <td>{{ $item->product->title }}</td>
                                 <td>₹{{ number_format($item->product->discount_price, 2) }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>{{ $order->id }}</td>
+                                {{-- <td>{{ $order_id }}</td> --}}
                                 <td>{{ $item->created_at->format('d-m-Y') }}</td>
                                 <td>₹{{ number_format($itemTotalPrice, 2) }}</td> 
 
@@ -49,9 +49,9 @@
                                <td><span>{{$add->pincode}}</span></td>
                                <td><span>{{$add->city}}</span></td>
                                 <td><span>{{$add->state}}</span></td>
-
                                 @endforeach
                             </tr>
+                            <td>{{ $order_id }}</td>
                         @endforeach
 
                         <tr>

@@ -98,22 +98,33 @@ Route::get('/product/edit/{id}',[ProductController::class,'edit'])->name('admin.
 Route::post('/product/edit/{id}',[ProductController::class,'update'])->name('admin.product.update');
 Route::delete('/product/delete/{id}',[ProductController::class,'removeproduct'])->name('admin.product.remove');
 
+Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+
 Route::middleware('auth')->group(function(){
 
         Route::controller(OrderController::class)->group(function(){
         Route::get('/add-to-cart/{pid}','addtoCart')->name('addtoCart');
-        Route::get('/remove-from-cart/{pid}','removefromCart')->name('removefromCart');
+        Route::get('/remove-from-cart/{pId}', [OrderController::class, 'removeFromCart'])->name('removefromCart');
+
+
+
+        // Route::get('/add-to-cart/{productId}', [OrderController::class, 'addToCart'])->name('addtoCart');        // Route::get('/remove-from-cart/{pid}','removefromCart')->name('removefromCart');
+        // Route::get('/remove/{pId}', [OrderController::class, 'removeFromCart'])->name('removefromCart');
+        // Route::get('/cart', [OrderController::class, 'showCart'])->name('cart');
+
+
         Route::get('/cart',[OrderController::class,'cart'])->name('cart');
         Route::get('/viewcart',[OrderController::class,'viewcart'])->name('viewcart');
         Route::get('/myorder','myorder')->name('myorder');
         Route::get('/payment/callback', 'PaymentController@handlePaymentCallback');
         Route::post('/payment', [PaymentController::class, 'Payment'])->name('orderCreate');
         Route::match(['get','post'],'/saveadd',[OrderController::class,'saveadd'])->name('saveadd');
+
+        Route::post('/updateadd', [OrderController::class, 'updateadd'])->name('updateadd');
+        // Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        
         Route::get('/thank-you', [OrderController::class, 'thankYou'])->name('thank-you');
+        
     });
 });
-
-
-
-
-

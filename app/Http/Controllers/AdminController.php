@@ -50,7 +50,6 @@ class AdminController extends Controller
     public function __construct(StatefulGuard $guard)
     {
         $this->guard = $guard;
-        // dd($this->guard);
     }
     
     
@@ -63,8 +62,6 @@ class AdminController extends Controller
         return view('admin.users',compact('data'));
     }
     
-    
-
     public function deleteuser($id){
         $data=user::find($id);
         $data->delete();
@@ -74,7 +71,6 @@ class AdminController extends Controller
     public function foodmenu(){
      
         $fooditems =Fooditem::all();
-        // return view('admin.foodmenu',compact('foodItems'));
         $categories =Category::all();
         return view('admin.foodmenu',compact('fooditems','categories'));
         
@@ -147,16 +143,9 @@ class AdminController extends Controller
 
     public function viewreservation()
     {
-        // if(Auth::id())
-        // {}
         $data=reservation::all();
         return view("admin.adminreservation",compact("data"));
         
-
-        // else
-        // {
-        //     return redirect('login');
-        // }
     }
 
     public function chefdata()
@@ -233,20 +222,32 @@ class AdminController extends Controller
         }
 
 
-public function orders(Request $request)
-{
-   
+public function orders(Request $request)    
+{    
     $user_id = Auth::user()->id;
-    $order = Order::with('Orderitem', 'address')->where('status', 0)->where('user_id', $user_id)->first();
 
-    $order->address_id = $request->address_id;
+    $order = Order::with('orderItems')
+                    ->where('status', 0)
+                    ->where('user_id', $user_id)
+                    ->first();
     
+    if ($order) {
 
-    $order->save();
+        $orderItem = $order->orderItems->first(); 
+        $address_id = $orderItem->address_id;
+    
+        $address = Address::where('id', $address_id)->get();
 
-    $address = Address::all(); 
+    } else {
+        dd("Order not found.");
+    }
+    
+if ($order) {
+    return view('admin.orders', ['order' => $order, 'address' => $address]);
 
-    return view('admin.orders', compact('order', 'address'));
+} else {
+    return view('admin.orders', ['order' => null,'address_id' => null]); 
+}
 }
 
     public function managecategory(Request $request){
@@ -301,6 +302,7 @@ public function orders(Request $request)
         $data['carts'] = Order::where('status',false)->orderBy('id','desc')->paginate(1);
         return view('admin.managecart',$data);
     }
+    
     public function search(Request $request)
     {
         $search=$request->search;

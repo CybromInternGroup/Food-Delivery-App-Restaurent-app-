@@ -23,8 +23,8 @@ class PaymentController extends Controller
     public function Payment(Request $request)
     {
         
-        $user = Auth::user();
-     
+        $id = Auth::user()->id;
+        // dd($user_id);
         // dd($request->all());
 
         
@@ -37,18 +37,16 @@ class PaymentController extends Controller
     
         
         $payment = Payment::create([
-            'user_id' => $user->id,
+            'user_id' => $id,
             'payment_id' => $paymentId,
             'amount' => $amount,
             'order_id' => $orderId,
             'address_id' => $request->address_id, 
             'status' => '1', 
         ]);
-    
+    // dd($payment);
         
         if ($payment) {
-           
-            
             return redirect()->route('thank-you')->with('message', 'Payment successful');
         } else {
             

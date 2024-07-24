@@ -14,11 +14,12 @@ use App\Models\Category;
 class HomeController extends Controller
 {
     public function index()
-     {
-        
-        
-       $data['categories'] = Category::all();
-       return view('home',$data);
+    {
+        $data['categories'] = Category::all();
+        $data['cartCount'] = Cart::where('user_id', Auth::id())->sum('quantity');
+
+        \Log::info('Cart Count: ' . $data['cartCount']);
+        return view('home', $data);
     }
 
 

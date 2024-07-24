@@ -9,11 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
+            $table->foreignid("user_id")->constrained()->orDelete("cascade")->nullable();
             $table->foreignid("address_id")->constrained()->orDelete("cascade")->nullable();
             $table->decimal('amount', 10, 2);
             $table->boolean('status')->default(false);

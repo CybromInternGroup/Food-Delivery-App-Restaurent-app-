@@ -23,6 +23,31 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Failed to remove item');
         }
     }
+
+    public function add(Request $request)
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return redirect()->back()->with('error', 'User not authenticated');
+        }
+
+        $productId = $request->input('product_id');
+        if (!$productId) {
+            return redirect()->back()->with('error', 'Product ID not provided');
+        }
+
+        
+        $cartItem = Cart::firstOrNew([
+            'user_id' => $userId,
+            'product_id' => $productId,
+        ]);
+
+        // Increment quantity
+        $cartItem->quantity += 1;
+        $cartItem->save();
+
+        return redirect()->back()->with('success', 'Product added to cart!');
+    }
 }
 
 

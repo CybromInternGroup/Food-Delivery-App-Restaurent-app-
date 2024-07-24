@@ -11,6 +11,7 @@ class Payment extends Model
 
     protected $fillable = [
         'order_id',
+        'user_id',
         'address_id',
         'amount',
         'status',
@@ -24,7 +25,5 @@ class Payment extends Model
     {
         return $this->belongsTo(Order::class);
     }
-
-   
 
 }
